@@ -1,4 +1,4 @@
-# @osintindustries/n8n-nodes-osint-industries
+# n8n-nodes-osint-industries
 
 This package adds the OSINT Industries API to your n8n workflows. Use it to enrich email addresses and phone numbers or to monitor your remaining API credits without leaving your automation canvas.
 
@@ -16,7 +16,7 @@ This package adds the OSINT Industries API to your n8n workflows. Use it to enri
 
 Follow the [official community node installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) to add the package to your n8n instance.
 
-The npm package name is `@osintindustries/n8n-nodes-osint-industries`.
+The npm package name is `n8n-nodes-osint-industries`.
 
 ## Operations
 

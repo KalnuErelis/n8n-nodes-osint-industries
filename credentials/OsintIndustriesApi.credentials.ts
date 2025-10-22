@@ -3,6 +3,7 @@ import type {
 	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
+	Icon,
 } from 'n8n-workflow';
 
 export class OsintIndustriesApi implements ICredentialType {
@@ -10,12 +11,12 @@ export class OsintIndustriesApi implements ICredentialType {
 
 	displayName = 'OSINT Industries API';
 
-	icon = {
-		light: 'file:osintIndustriesApi.svg' as const,
-		dark: 'file:osintIndustriesApi.svg' as const,
+	icon: Icon = {
+		light: 'file:osintIndustriesApi.light.svg',
+		dark: 'file:osintIndustriesApi.dark.svg',
 	};
 
-	documentationUrl = 'https://github.com/osintindustries/n8n-nodes-osint-industries#credentials';
+	documentationUrl = 'https://github.com/KalnuErelis/n8n-nodes-osint-industries#credentials';
 
 	properties: INodeProperties[] = [
 		{

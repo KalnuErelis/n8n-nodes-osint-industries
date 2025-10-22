@@ -1,9 +1,9 @@
 {
-  "name": "@osintindustries/n8n-nodes-osint-industries",
+  "name": "n8n-nodes-osint-industries",
   "version": "0.1.0",
   "description": "n8n community node for the OSINT Industries API",
   "license": "MIT",
-  "homepage": "https://github.com/osintindustries/n8n-nodes-osint-industries#readme",
+  "homepage": "https://github.com/KalnuErelis/n8n-nodes-osint-industries#readme",
   "keywords": [
     "n8n-community-node-package",
     "osint",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/osintindustries/n8n-nodes-osint-industries.git"
+    "url": "https://github.com/KalnuErelis/n8n-nodes-osint-industries.git"
   },
   "scripts": {
     "build": "n8n-node build",
