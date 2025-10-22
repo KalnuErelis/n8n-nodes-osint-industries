@@ -1,0 +1,18 @@
+{
+	"node": "@osintindustries/n8n-nodes-osint-industries",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Security", "Data & Analytics"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/osintindustries/n8n-nodes-osint-industries#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/osintindustries/n8n-nodes-osint-industries#readme"
+			}
+		]
+	}
+}

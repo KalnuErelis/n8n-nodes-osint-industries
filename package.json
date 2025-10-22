@@ -1,0 +1,55 @@
+{
+  "name": "@osintindustries/n8n-nodes-osint-industries",
+  "version": "0.1.0",
+  "description": "n8n community node for the OSINT Industries API",
+  "license": "MIT",
+  "homepage": "https://github.com/osintindustries/n8n-nodes-osint-industries#readme",
+  "keywords": [
+    "n8n-community-node-package",
+    "osint",
+    "osint-industries"
+  ],
+  "author": {
+    "name": "OSINT Industries",
+    "email": "support@osint.industries"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/osintindustries/n8n-nodes-osint-industries.git"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": false,
+    "credentials": [
+      "dist/credentials/OsintIndustriesApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/OsintIndustries/OsintIndustries.node.js"
+    ]
+  },
+  "dependencies": {
+    "osint-industries-ts": "^0.1.7"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "^0.13.0",
+    "eslint": "9.32.0",
+    "prettier": "3.6.2",
+    "release-it": "^19.0.4",
+    "typescript": "5.9.2"
+  }
+}
