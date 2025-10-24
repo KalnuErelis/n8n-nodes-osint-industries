@@ -5,9 +5,126 @@ import type {
 	INodeTypeDescription,
 } from 'n8n-workflow';
 import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
+import type { Module as OsintModule } from 'osint-industries-ts';
 import { OsintClient } from 'osint-industries-ts';
 
 type SearchType = 'email' | 'phone';
+type JsonPrimitive = string | number | boolean | null;
+type PlatformVariableValue =
+	| JsonPrimitive
+	| PlatformVariableValue[]
+	| { [key: string]: PlatformVariableValue };
+type PlatformVariable = Record<string, PlatformVariableValue>;
+
+interface ModuleData {
+	registered?: boolean;
+	id?: string | number;
+	name?: string;
+	firstName?: string;
+	lastName?: string;
+	pictureUrl?: string;
+	profileUrl?: string;
+	bannerUrl?: string;
+	username?: string;
+	gender?: string;
+	language?: string;
+	location?: string;
+	lastSeen?: string;
+	creationDate?: string;
+	followers?: number;
+	following?: number;
+	premium?: boolean;
+	platformVariables: PlatformVariable[];
+}
+
+interface NormalizedModule {
+	name: string;
+	data: ModuleData;
+}
+
+const normalizePlatformVariableValue = (
+	value: unknown,
+): PlatformVariableValue | undefined => {
+	if (
+		value === null ||
+		typeof value === 'string' ||
+		typeof value === 'number' ||
+		typeof value === 'boolean'
+	) {
+		return value;
+	}
+
+	if (Array.isArray(value)) {
+		const normalizedArray = value
+			.map((entry) => normalizePlatformVariableValue(entry))
+			.filter((entry): entry is PlatformVariableValue => entry !== undefined);
+
+		return normalizedArray;
+	}
+
+	if (typeof value === 'object' && value !== null) {
+		return Object.fromEntries(
+			Object.entries(value as Record<string, unknown>)
+				.map(([key, entryValue]) => {
+					const normalizedValue = normalizePlatformVariableValue(entryValue);
+					return normalizedValue === undefined ? null : [key, normalizedValue];
+				})
+				.filter((entry): entry is [string, PlatformVariableValue] => entry !== null),
+		);
+	}
+
+	return undefined;
+};
+
+const normalizePlatformVariables = (
+	platformVariables: Array<Record<string, unknown>> | undefined,
+): PlatformVariable[] =>
+	Array.isArray(platformVariables)
+		? platformVariables.map((variable) => {
+				const entries = Object.entries(variable).reduce<Array<[string, PlatformVariableValue]>>(
+					(acc, [key, value]) => {
+						const normalizedValue = normalizePlatformVariableValue(value);
+						if (normalizedValue !== undefined) {
+							acc.push([key, normalizedValue]);
+						}
+						return acc;
+					},
+					[],
+				);
+
+				return Object.fromEntries(entries);
+		  })
+		: [];
+
+const normalizeModule = (module: OsintModule): NormalizedModule => {
+	const { data, name } = module;
+	const normalizedData: ModuleData = {
+		platformVariables: normalizePlatformVariables(data.platformVariables),
+	};
+
+	if (data.registered !== undefined) normalizedData.registered = data.registered;
+	if (data.id !== undefined) normalizedData.id = data.id;
+	if (data.name !== undefined) normalizedData.name = data.name;
+	if (data.firstName !== undefined) normalizedData.firstName = data.firstName;
+	if (data.lastName !== undefined) normalizedData.lastName = data.lastName;
+	if (data.pictureUrl !== undefined) normalizedData.pictureUrl = data.pictureUrl;
+	if (data.profileUrl !== undefined) normalizedData.profileUrl = data.profileUrl;
+	if (data.bannerUrl !== undefined) normalizedData.bannerUrl = data.bannerUrl;
+	if (data.username !== undefined) normalizedData.username = data.username;
+	if (data.gender !== undefined) normalizedData.gender = data.gender;
+	if (data.language !== undefined) normalizedData.language = data.language;
+	if (data.location !== undefined) normalizedData.location = data.location;
+	if (data.lastSeen !== undefined) normalizedData.lastSeen = data.lastSeen;
+	if (data.creationDate !== undefined) normalizedData.creationDate = data.creationDate;
+	if (data.followers !== undefined) normalizedData.followers = data.followers;
+	if (data.following !== undefined) normalizedData.following = data.following;
+	if (data.premium !== undefined) normalizedData.premium = data.premium;
+
+	return {
+		name,
+		data: normalizedData,
+	};
+};
 
 export class OsintIndustries implements INodeType {
 	description: INodeTypeDescription = {
@@ -144,9 +261,10 @@ export class OsintIndustries implements INodeType {
 						query,
 						timeout,
 					});
+					const normalizedModules = result.map(normalizeModule);
 
 					if (splitModules) {
-						if (result.length === 0) {
+						if (normalizedModules.length === 0) {
 							returnData.push({
 								json: {
 									query,
@@ -156,7 +274,7 @@ export class OsintIndustries implements INodeType {
 								pairedItem: { item: itemIndex },
 							});
 						} else {
-							for (const module of result) {
+							for (const module of normalizedModules) {
 								returnData.push({
 									json: {
 										query,
@@ -172,7 +290,7 @@ export class OsintIndustries implements INodeType {
 							json: {
 								query,
 								type: searchType,
-								modules: result,
+								modules: normalizedModules,
 							},
 							pairedItem: { item: itemIndex },
 						});

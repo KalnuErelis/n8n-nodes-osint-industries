@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-osint-industries",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "n8n community node for the OSINT Industries API",
   "license": "MIT",
   "homepage": "https://github.com/KalnuErelis/n8n-nodes-osint-industries#readme",
